@@ -1,5 +1,6 @@
 build: 
-	docker build -t cyber-esteban .
-
+	docker build -t cyber-esteban:latest .
 run: 
-	docker run -p 8080:8080 cyber-esteban
+	docker rm -f cyber-esteban || true
+	docker run -p 8080:8080 --name cyber-esteban cyber-esteban:latest
+
