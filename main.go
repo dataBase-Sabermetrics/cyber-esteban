@@ -74,7 +74,7 @@ func newGame(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests() {
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/game", newGame)
+	http.HandleFunc("/api/game", newGame)
 	go func() {
 		if err := http.ListenAndServe(":8080", nil); err != nil {
 			log.Fatal(err)
