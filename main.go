@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
+  "fmt"
+  "log"
+  "os"
   "io"
   "os/signal"
   "syscall"
-	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
+  "github.com/bwmarrin/discordgo"
+  "github.com/joho/godotenv"
   "net/http"
 )
 
