@@ -14,7 +14,7 @@ import (
 
 var (
 	discord *discordgo.Session
-	channelID = "1313981819150143528"
+	channelID = os.Getenv("CHANNELID")
 )
 
 func startDiscord() *discordgo.Session {
