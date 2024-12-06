@@ -5,3 +5,9 @@ services:
       - "8080:8080"
     volumes:
       - ./.env:/app/.env 
+    networks:
+      - database2_localdev
+
+networks:
+  database2_localdev:
+    external: true
