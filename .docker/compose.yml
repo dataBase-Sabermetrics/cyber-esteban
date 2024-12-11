@@ -1,5 +1,6 @@
 services:
   cyber-esteban:
+    container_name: cyber-esteban
     build:
       context: ..
       dockerfile: .docker/Dockerfile

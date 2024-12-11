@@ -12,10 +12,7 @@ import (
   "net/http"
 )
 
-var (
-  discord *discordgo.Session
-  channelID = os.Getenv("CHANNELID")
-)
+var discord *discordgo.Session
 
 func startDiscord() *discordgo.Session {
   err := godotenv.Load()
@@ -30,15 +27,6 @@ func startDiscord() *discordgo.Session {
 
   sess.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
   
-  sess.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-    if m.Author.ID == s.State.User.ID {
-      return
-    }
-    if m.Content == "hello" {
-      s.ChannelMessageSend(m.ChannelID, "Hello, "+m.Author.Username)
-    }
-  })
-
   err = sess.Open()
   if err != nil {
     log.Fatal(err)
@@ -50,7 +38,8 @@ func homePage(w http.ResponseWriter, r *http.Request){
   fmt.Fprintf(w, "Cyber Esteban is running 🚀")
 }
 
-func newGame(w http.ResponseWriter, r *http.Request) {
+func activityMessage(w http.ResponseWriter, r *http.Request) {
+  channelID := os.Getenv("CHANNELID")
   if r.Method != http.MethodPost {
     http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
     return
@@ -60,21 +49,22 @@ func newGame(w http.ResponseWriter, r *http.Request) {
     http.Error(w, "Error reading request body", http.StatusBadRequest)
     return
   }
-  gameMessage := string(body)
+
+  message := string(body)
   
-  _, err = discord.ChannelMessageSend(channelID, gameMessage)
+  _, err = discord.ChannelMessageSend(channelID, message)
   if err != nil {
     http.Error(w, "Error sending Discord message", http.StatusInternalServerError)
     return
   }
   
   w.WriteHeader(http.StatusOK)
-  fmt.Fprintf(w, "Received and sent to Discord: %s", gameMessage)
+  fmt.Fprintf(w, "Received and sent to Discord: %s", message)
 }
 
 func handleRequests() {
   http.HandleFunc("/", homePage)
-  http.HandleFunc("/api/game", newGame)
+  http.HandleFunc("/api", activityMessage)
 
   fmt.Println("Starting HTTP server on :8080...")
   if err := http.ListenAndServe(":8080", nil); err != nil {
