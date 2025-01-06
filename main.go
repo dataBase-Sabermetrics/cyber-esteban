@@ -44,6 +44,14 @@ func activityMessage(w http.ResponseWriter, r *http.Request) {
     http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
     return
   }
+
+  validAPIKey := os.Getenv("API_KEY")
+  apiKey := r.Header.Get("X-API-Key")
+  if apiKey != validAPIKey {
+      http.Error(w, "Invalid API key", http.StatusForbidden)
+      return
+  }
+
   body, err := io.ReadAll(r.Body)
   if err != nil {
     http.Error(w, "Error reading request body", http.StatusBadRequest)
