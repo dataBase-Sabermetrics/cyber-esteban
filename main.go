@@ -39,6 +39,20 @@ func homePage(w http.ResponseWriter, r *http.Request){
 }
 
 func activityMessage(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Access-Control-Allow-Origin", "https://www.dbsabermetrics.com")
+  w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-API-KEY")
+  w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+
+  if r.Method == http.MethodOptions {
+    w.WriteHeader(http.StatusNoContent)
+    return
+  }
+
+  if r.Method != http.MethodPost {
+    http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+    return
+  }
+
   channelID := os.Getenv("CHANNELID")
   if r.Method != http.MethodPost {
     http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
@@ -46,7 +60,7 @@ func activityMessage(w http.ResponseWriter, r *http.Request) {
   }
 
   validAPIKey := os.Getenv("API_KEY")
-  apiKey := r.Header.Get("X-API-Key")
+  apiKey := r.Header.Get("X-API-KEY")
   if apiKey != validAPIKey {
       http.Error(w, "Invalid API key", http.StatusForbidden)
       return
