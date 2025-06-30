@@ -1,4 +1,4 @@
-FROM arm64v8/golang:latest
+FROM golang:latest
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
